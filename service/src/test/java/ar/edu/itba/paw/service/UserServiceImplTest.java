@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,12 +20,14 @@ public class UserServiceImplTest {
     private UserServiceImpl userService = new UserServiceImpl();
     @Mock
     private UserDao userDao;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testCreateUser() {
         User user = new User(1, "juan", "1234");
         Mockito.when(userDao.create(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
-
+        Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn("1234");
 
         User u = userService.create("juan", "1234");
 
