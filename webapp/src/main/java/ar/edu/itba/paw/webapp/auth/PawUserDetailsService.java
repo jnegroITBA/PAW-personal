@@ -33,9 +33,8 @@ public class PawUserDetailsService implements UserDetailsService {
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         // Migrate users with un-hashed passwords
-        if(!BYCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
+        //if(!BYCRYPT_PATTERN.matcher(user.getPassword()).matches())
             // TODO: Update user password
-        }
 
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
     }
