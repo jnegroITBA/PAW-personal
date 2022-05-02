@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.UserForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 public class HelloWorldController {
 
     private final UserService userService;
+    private final Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
 
     @Autowired
     public HelloWorldController(UserService userService) {
@@ -25,6 +28,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.HEAD })
     public ModelAndView helloWorld(@RequestParam(name = "userId", defaultValue = "1") final long userId) {
+        LOGGER.info("Hello world!");
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.getUserById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
