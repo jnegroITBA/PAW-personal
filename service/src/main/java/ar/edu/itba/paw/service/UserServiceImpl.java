@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserById(id);
     }
 
+    @Transactional
     @Override
     public User create(String username, String password) {
         // TODO validate username and password
