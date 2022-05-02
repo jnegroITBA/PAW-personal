@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
@@ -17,6 +18,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public Optional<User> getUserById(long id) {
@@ -27,7 +30,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(String username, String password) {
         // TODO validate username and password
-        return userDao.create(username, passwordEncoder.encode(password));
+        User user = userDao.create(username, passwordEncoder.encode(password));
+        emailService.sendEmail("Hola que tal");
+        return user;
     }
 
     @Override
