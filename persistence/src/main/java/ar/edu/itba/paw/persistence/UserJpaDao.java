@@ -17,7 +17,7 @@ public class UserJpaDao implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public User create(String username, String password) {
+    public User create(final String username, final String password) {
         final User user = new User(username, password);
         // Como esta entidad no tiene un ID, se crea en la DB y se settea el ID.
         // Si fuese una entidad con ID ya establecido, va a hacer un Update porque entiende que ya existía.
@@ -26,20 +26,15 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return Optional.ofNullable(entityManager.find(User.class, id));
-    }
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        final TypedQuery<User> query = entityManager.createQuery("FROM User u WHERE u.username = :username", User.class);
+    public Optional<User> findByUsername(final String username) {
+        final TypedQuery<User> query = entityManager.createQuery("from User as u where u.username = :username", User.class);
         query.setParameter("username", username);
-        return Optional.ofNullable(query.getSingleResult());
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
-    public Optional<User> getUserById(long id) {
-        return Optional.empty();
+    public Optional<User> getUserById(final long id) {
+        return Optional.ofNullable(entityManager.find(User.class, id));
     }
 
     @Override

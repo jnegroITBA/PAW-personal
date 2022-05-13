@@ -37,9 +37,6 @@ import java.util.Properties;
 @Configuration
 public class WebConfig {
 
-    @Value("classpath:sql/schema.sql")
-    private Resource schemaSql;
-
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
@@ -60,20 +57,6 @@ public class WebConfig {
         ds.setPassword("root");
 
         return ds;
-    }
-
-    @Bean
-    public DataSourceInitializer dataSourceInitializer() {
-        final DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(dataSource());
-        dsi.setDatabasePopulator(databasePopulator());
-        return dsi;
-    }
-
-    public DatabasePopulator databasePopulator() {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(schemaSql);
-        return populator;
     }
 
     @Bean
