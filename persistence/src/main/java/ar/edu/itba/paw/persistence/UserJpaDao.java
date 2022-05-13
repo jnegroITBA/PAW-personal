@@ -2,12 +2,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,10 +35,5 @@ public class UserJpaDao implements UserDao {
     @Override
     public Optional<User> getUserById(final long id) {
         return Optional.ofNullable(entityManager.find(User.class, id));
-    }
-
-    @Override
-    public List<User> getAll(int page) {
-        return null;
     }
 }

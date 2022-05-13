@@ -11,5 +11,4 @@ public interface UserDao {
 
     User create(String username, String password);
 
-    List<User> getAll(int page);
 }
