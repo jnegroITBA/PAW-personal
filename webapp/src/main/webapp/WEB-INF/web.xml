@@ -42,8 +42,29 @@
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   </filter>
   
+  <filter>
+    <filter-name>openEntityManagerInView</filter-name>
+    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+  </filter>
+
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!--
+  Esto hace que la sesión a la DB se mantenga para todos los Requests que me hagan, que no se cierra después de terminar el mismo método.
+  Luego, una de las ventajas es poder hacer Lazy Loading de las cosas no inicializadas, porque la sesión se mantiene activa y por ende podés traer lo que vayas necestiando del objeto.
+  Sin embargo, una desventaja es que si tenés tu modelo como CASCADA, luego cualqueir cambio que le hagas a la instancia de una entidad, se reflejará en la DB,
+  por lo que estarías modificando la DB más seguido y con menos control.
+  Otra desventaja es que te abre un acceso a la DB, por lo que estaría bueno que primero se haga el filtro de Spring Security (arriba de este), y luego el de JPA, así no se abre un acceso a la DB
+  sin que valides qué es lo que está pasando en la página.
+  Por último, ahora no sería necesario el método merge para linkear las instancias de modelos con las entidades reales, excepto que llames a algo de servicios directamente desde un método
+  de Spring Security, porque ahí no habría corrido el filtro de JPA (por ejemplo, en UserServiceDetails).
+  -->
+  <filter-mapping>
+    <filter-name>openEntityManagerInView</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 </web-app>

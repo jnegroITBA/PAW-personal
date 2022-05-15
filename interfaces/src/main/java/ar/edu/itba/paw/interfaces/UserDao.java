@@ -11,4 +11,5 @@ public interface UserDao {
 
     User create(String username, String password);
 
+    User merge(User user);
 }

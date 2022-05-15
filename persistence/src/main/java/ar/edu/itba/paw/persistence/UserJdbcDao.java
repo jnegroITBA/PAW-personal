@@ -43,6 +43,11 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public User merge(User user) {
+        return null;
+    }
+
+    @Override
     public Optional<User> findByUsername(String username) {
         return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{username}, ROW_MAPPER).stream().findFirst();
     }

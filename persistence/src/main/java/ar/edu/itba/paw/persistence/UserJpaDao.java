@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -35,5 +34,14 @@ public class UserJpaDao implements UserDao {
     @Override
     public Optional<User> getUserById(final long id) {
         return Optional.ofNullable(entityManager.find(User.class, id));
+    }
+
+    @Override
+    public User merge(final User user) {
+        // Para métodos de servicios transaccionales, si te pasan una instancia de una clase y vos la querés modificar, vas a estar modificando una copia.
+        // Esto es porque JPA va a armar una sesión (transacción) de la entidad que le pasaste, y va a hacer lo que le hayas pedido,
+        // pero al momento de devolverte la entidad, la sesión transaccional va a morir y por ende lo que devuelve no va a estar linkeado a la DB.
+        // Luego, tenés que hacer un merge antes de modificar la entidad, para que JPA tome la entidad linkeada a la DB y modifique eso.
+        return entityManager.merge(user);
     }
 }
