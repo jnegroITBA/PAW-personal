@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,6 +17,12 @@ public class User {
     private String username;
     @Column(name = "password", nullable = false, length = 100)
     private String password;
+
+    @OneToMany(orphanRemoval = false, mappedBy = "assignedTo")
+    List<Issue> assignedIssues;
+
+    @OneToMany(orphanRemoval = true, mappedBy = "reportedBy")
+    List<Issue> reportedIssues;
 
     @Deprecated
     public User(long id, String username, String password) {
@@ -41,5 +48,19 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public List<Issue> getAssignedIssues() {
+        return assignedIssues;
+    }
+
+    public List<Issue> getReportedIssues() {
+        return reportedIssues;
+    }
+
+    public Issue reportNewIssue(final String description, final Priority priority) {
+        final Issue issue = new Issue(this, description, priority);
+        reportedIssues.add(issue);
+        return issue;
     }
 }
