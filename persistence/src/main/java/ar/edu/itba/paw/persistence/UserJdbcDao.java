@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,5 +51,10 @@ public class UserJdbcDao implements UserDao {
     @Override
     public Optional<User> findByUsername(String username) {
         return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{username}, ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public List<User> getAll(int page) {
+        return jdbcTemplate.query("SELECT * FROM users LIMIT 5 OFFSET ?", new Object[]{page * 10}, ROW_MAPPER);
     }
 }

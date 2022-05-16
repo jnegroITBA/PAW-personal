@@ -12,4 +12,6 @@ public interface UserDao {
     User create(String username, String password);
 
     User merge(User user);
+
+    List<User> getAll(int page);
 }

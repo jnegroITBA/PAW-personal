@@ -6,8 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserJpaDao implements UserDao {
@@ -43,5 +46,28 @@ public class UserJpaDao implements UserDao {
         // pero al momento de devolverte la entidad, la sesión transaccional va a morir y por ende lo que devuelve no va a estar linkeado a la DB.
         // Luego, tenés que hacer un merge antes de modificar la entidad, para que JPA tome la entidad linkeada a la DB y modifique eso.
         return entityManager.merge(user);
+    }
+
+    public List<User> getAllIncorrecta(int page) {
+        // Esto generalmente está mal, y falla, pues ahora mismo podrían devolverse más de un ROW por entidad, por lo que
+        // pedir 10 rows no siempre son 10 entidades. Eso es porque si User tiene algo que se agarra en FetchType.EAGER,
+        // luego por cada User también se hará otra consulta para hacer el fetch de lo que sea EAGER, resultando en menos usuarios obtenidos. 
+        final TypedQuery<User> query = entityManager.createQuery("from User", User.class);
+        query.setFirstResult(page * 10);
+        query.setMaxResults(10);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<User> getAll(int page) {
+        Query idQuery = entityManager.createNativeQuery("SELECT * FROM users LIMIT 5 OFFSET :offset", Long.class);
+        idQuery.setParameter("offset", page * 5);
+        @SuppressWarnings("unchecked")
+        List<Long> userIds = (List<Long>) idQuery.getResultList().stream()
+                .map(o -> ((Integer) o).longValue()).collect(Collectors.toList());
+
+        final TypedQuery<User> query = entityManager.createQuery("from User as u where u.id in :ids", User.class);
+        query.setParameter("ids", userIds);
+        return query.getResultList();
     }
 }
