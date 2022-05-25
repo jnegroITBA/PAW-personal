@@ -53,8 +53,8 @@ public class WebConfig {
 
         ds.setDriverClass(org.postgresql.Driver.class);
         ds.setUrl("jdbc:postgresql://localhost/paw-local");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setUsername("postgres");
+        ds.setPassword("admin");
 
         return ds;
     }
